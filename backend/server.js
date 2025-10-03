@@ -1,6 +1,9 @@
 import express from "express";
+const dotenv = require("dotenv");
+
 
 const app = express();
+dotenv.config();
 
 
 
@@ -18,4 +21,7 @@ app.get("v1/chats/:id", (req, res) => {
     const singleChat = chats.find((c) => c.id === req.params.id);
     res.send(singleChat); 
 })
-app.listen(5000, console.log("Server is running smoothly"));
+
+
+const port = process.env.PORT || 5000;
+app.listen(5000, console.log('Server is running smoothly ${PORT}'));
