@@ -46,46 +46,38 @@ export const userDummyData = [
     {
         "_id": "680f50aaf10f3cd28382ecf2",
         "email": "test1@greatstack.dev",
-        "fullName": "nobo",
+        "fullName": "Noma",
         "profilePic": profile_alison,
-        "bio": "Hi Everyone",
+        "bio": "Hi Everyone, I am Using QuickChat",
     },
     {
         "_id": "680f50e4f10f3cd28382ecf9",
         "email": "test2@greatstack.dev",
-        "fullName": "prashant",
+        "fullName": "Nobo Das",
         "profilePic": profile_martin,
-        "bio": "Hi Everyone",
+        "bio": "Hi Everyone, I am Using QuickChat",
     },
     {
         "_id": "680f510af10f3cd28382ed01",
         "email": "test3@greatstack.dev",
-        "fullName": "keerti",
+        "fullName": "Saha Tushar",
         "profilePic": profile_enrique,
-        "bio": "Hi Everyone",
+        "bio": "Hi Everyone, I am Using QuickChat",
     },
     {
         "_id": "680f5137f10f3cd28382ed10",
         "email": "test4@greatstack.dev",
-        "fullName": "tushar",
+        "fullName": "Prashant",
         "profilePic": profile_marco,
-        "bio": "Hi Everyone",
+        "bio": "Hi Everyone, I am Using QuickChat",
     },
     {
         "_id": "680f516cf10f3cd28382ed11",
         "email": "test5@greatstack.dev",
-        "fullName": "noma",
+        "fullName": "keerti",
         "profilePic": profile_richard,
-        "bio": "Hi Everyone",
-    },
-
-       {
-        "_id": "680f516cf10f3cd28382ed11",
-        "email": "test5@greatstack.dev",
-        "fullName": "ankita",
-        "profilePic": profile_richard,
-        "bio": "Hi Everyone",
-    },
+        "bio": "Hi Everyone, I am Using QuickChat",
+    }
 ]
 
 export const messagesDummyData = [
@@ -144,13 +136,5 @@ export const messagesDummyData = [
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         "seen": true,
         "createdAt": "2025-04-28T10:24:08.523Z",
-    },
-    {
-        "_id": "680f5748f10f3cd28382f0ca",
-        "senderId": "680f5116f10f3cd28382ed02",
-        "receiverId": "680f50e4f10f3cd28382ecf9",
-        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "seen": true,
-        "createdAt": "2025-04-28T10:24:08.523Z",
-    },
+    }
 ]
