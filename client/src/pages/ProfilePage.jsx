@@ -19,7 +19,7 @@ const ProfilePage = () => {
       <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg p-6'>
         
    
-        <form onSubmi={handleSubmit} className="flex flex-col gap-5 flex-1">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 flex-1">
           <h3 className="text-lg font-semibold text-white">Profile Details</h3>
 
          
