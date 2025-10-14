@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    fullName: {type: String, required: true},
-    password: { type: String, required: true, minlength: 6 },
-    profilePic: { type: String, default: "" },
-    bio: { type: String },
+    senderId: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+    receiverId: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+    text: { type: String, },
+    image: { type: String, },
+    seen: {type: Boolean, default: false}
 }, { timestamps: true })
 
 
