@@ -8,7 +8,6 @@ const LoginPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [bio, setBio] = useState("")
-  const [isDataLoading, setIsDataLoading] = useState(false);
   const [isDataSubmitted, setIsDataSubmitted] = useState(false);
 
   const onSubmitHandler = (event) => {
