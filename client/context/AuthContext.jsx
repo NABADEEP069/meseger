@@ -3,7 +3,6 @@ import axios from 'axios'
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
 
@@ -15,7 +14,7 @@ export const AuthProvider = ({ children })=>{
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setsocket] = useState(null);
 
-  
+
     const checkAuth = async () => {
         try {
             const { data } = await axios.get("/api/auth/check");
@@ -24,9 +23,12 @@ export const AuthProvider = ({ children })=>{
                 connectSocket(data.user)
             }
         } catch (error) {
-            toast.error(error.message)
+        
+            const errorMessage = error.response?.data?.message || error.message;
+            toast.error(errorMessage);
         }
     }
+
     const login = async (state, credentials)=>{
         try {
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
@@ -41,7 +43,9 @@ export const AuthProvider = ({ children })=>{
                 toast.error(data.message)
             }
         } catch (error) {
-            toast.error(data.message)
+          
+            const errorMessage = error.response?.data?.message || error.message;
+            toast.error(errorMessage);
         }
     }
 
@@ -51,25 +55,25 @@ export const AuthProvider = ({ children })=>{
         setAuthUser(null);
         setOnlineUsers([]);
         axios.defaults.headers.common["token"] = null;
-       
         toast.success("Logged out successfully")
         socket.disconnect();
     }
 
+
+  
     const updateProfile = async (body)=>{
         try {
             const { data } = await axios.put("/api/auth/update-profile", body);
             if(data.success){
                 setAuthUser(data.user);
-              
                 toast.success("Profile update successful")
             }
         } catch (error) {
-            toast.error(error.message)
+            const errorMessage = error.response?.data?.message || error.message;
+            toast.error(errorMessage);
         }
     }
 
-   
     const connectSocket = (userData)=>{
         if(!userData || socket?.connected) return;
         const newSocket = io(backendUrl, {
@@ -84,6 +88,7 @@ export const AuthProvider = ({ children })=>{
             setOnlineUsers(userIds);
         })
     }
+
     useEffect(()=>{
         if(token){
             axios.defaults.headers.common["token"] = token;
