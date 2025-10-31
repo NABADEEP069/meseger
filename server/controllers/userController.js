@@ -19,6 +19,9 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = new User({ fullName, email, password: hashedPassword, bio });
 
+       
+        await newUser.save(); 
+
         const token = generateToken(newUser._id);
         res.json({ success: true, userData: newUser, message: "User created successfully", token });
     }
@@ -34,6 +37,11 @@ export  const login = async (req, res) => {
         const { email, password } = req.body;
         const userData = await User.findOne({ email });
 
+       
+        if (!userData) {
+            return res.json({ success: false, message: "Invalid credentials" });
+        }
+
         const isPasswordCorrect = await bcrypt.compare(password, userData.password);
         if (!isPasswordCorrect) {
             return res.json({ success: false, message: "Invalid credentials" });
@@ -41,7 +49,8 @@ export  const login = async (req, res) => {
 
         const token = generateToken(userData._id)
 
-        res.json({ success: true, userData, message: "Login successful"})
+       
+        res.json({ success: true, userData, message: "Login successful", token})
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Internal server error" })

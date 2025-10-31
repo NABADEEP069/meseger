@@ -1,14 +1,18 @@
-import React, {  use, useEffect } from 'react'
+import React, {  useEffect } from 'react'
 import assets, { messagesDummyData } from '../assets/assets'
 import { formatMessageTime } from '../lib/utils'
 import { ChatContext } from '../../context/ChatContext'
 import { AuthContext } from '../../context/AuthContext'
 import { useContext } from 'react'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
+
+
 
 const ChatContainer = () => {
 
- const { messages, selectedUser, setselectedUser, sendMessage, getMessage } = useContext(ChatContext)
+
+ const { messages, selectedUser, setselectedUser, sendMessage, getMessages } = useContext(ChatContext)
   const { authUser, onlineUsers } = useContext(AuthContext)
 
   const scrollEnd = React.useRef()
@@ -41,7 +45,8 @@ const ChatContainer = () => {
 
   useEffect(() => {
     if (selectedUser) {
-      getMessage(selectedUser._id); 
+     
+      getMessages(selectedUser._id); 
     }
     },[selectedUser])
 
@@ -68,7 +73,7 @@ const ChatContainer = () => {
         />
         <img src={assets.help_icon} alt="Help Icon" className="max-w-5 max-md:hidden" />
       </div>
-// chat
+// CHAT
       <div className='flex flex-col h-[calc(100%-120px)] overflow-y-scroll p-3 pb-6'>
         {messages.map((msg, index) => (
           <div
@@ -101,7 +106,7 @@ const ChatContainer = () => {
         <div ref={scrollEnd}></div>
       </div>
 
-// bottom area
+
 
       <div className='absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3'>
         <div className='flex-1 flex items-center border border-gray-100/12 px-3 rounded-full'>

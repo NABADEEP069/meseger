@@ -3,21 +3,18 @@ import { useState, useContext } from "react";
 import { AuthContext } from "./AuthContext.jsx";
 import toast from "react-hot-toast";
 
+
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children })=>{
-
-
     const [messages, setMessages] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null)
     const [unseenMessages, setUnseenMessages] = useState({})
 
-
     const {socket, axios} = useContext(AuthContext);
 
-
-    // functions to handle chat operations can be added here
+  
     const getUsers = async () => {
        try {
            const { data } = await axios.get("/api/messages/users");
@@ -29,22 +26,22 @@ export const ChatProvider = ({ children })=>{
         toast.error(error.message)
        }
     }
-
-    // 
     const getMessages = async (userId) => {
         try {
            const { data } =  await axios.get(`/api/messages/${userId}`);
+            if (data.success) {
+               setMessages(data.messages);
+           }
         } catch (error) {
             toast.error(error.message)
         }
     }
 
-
-    // send msg to selected user
     const sendMessage = async (messageData) => {
         try {
             const {data} = await axios.post(`/api/messages/send/${selectedUser._id}`, messageData);
             if(data.success){
+           
                 setMessages((prevMessages) => [...prevMessages, data.message])
             }else{
                 toast.error(data.message);
@@ -54,7 +51,7 @@ export const ChatProvider = ({ children })=>{
         }
     }  
 
-    // getting new msg instantly using socket io
+   
     const subscribeToNewMessages = () => {
         if(!socket) return;
 
@@ -71,8 +68,6 @@ export const ChatProvider = ({ children })=>{
         })
     }
 
-
-    // unsubs from msg
     const unsubscribeFromNewMessages = () => {  
         if(socket) socket.off("newMessages");
     }
@@ -81,7 +76,6 @@ export const ChatProvider = ({ children })=>{
         subscribeToNewMessages();
         return ()=> unsubscribeFromNewMessages();
     },[socket, selectedUser])
-
 
      const value = {
         messages, users, selectedUser, getUsers, getMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages
@@ -93,4 +87,4 @@ export const ChatProvider = ({ children })=>{
         { children }
     </ChatContext.Provider>
     )
-}  
+}

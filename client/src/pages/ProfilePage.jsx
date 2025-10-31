@@ -8,7 +8,6 @@ const ProfilePage = () => {
 
   const {authUser, updateProfile} = useContext(AuthContext)
   
-
   const [selectedImg, setSelectedImg] = useState(null)
   const navigate = useNavigate();
   const [name, setName] = useState(authUser.fullName)
@@ -24,14 +23,14 @@ const ProfilePage = () => {
     }
      
 
-  const  reader = new FileReader();
-  reader.readAsDataURL(selectedImg); 
-  reader.onload = async () => {
-    const base64Image = reader.result;
-    await updateProfile({profilePic: base64Image, fullName: name, bio});
-    navigate('/');
-
-  }
+    const  reader = new FileReader();
+    reader.readAsDataURL(selectedImg); 
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      await updateProfile({profilePic: base64Image, fullName: name, bio});
+      navigate('/');
+    }
+  } 
 
   return (
     <div className='min-h-screen bg-cover bg-no-repeat flex items-center justify-center'>
@@ -68,9 +67,9 @@ const ProfilePage = () => {
             className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-200"
           />
 
+         
           <button 
-            type="button"
-            onClick={() => navigate('/')} 
+            type="submit"
             className="py-2 px-4 bg-gradient-to-r from-purple-400 to-violet-600 rounded-md text-white font-medium hover:opacity-90 transition"
           >
             Save & Continue
@@ -81,6 +80,5 @@ const ProfilePage = () => {
     </div>
   )
 }
-}
-export default ProfilePage
 
+export default ProfilePage

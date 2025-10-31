@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js";
 import {  io, UserSocketMap } from  "../server.js";
 
+
 export const getUsersForSidebar = async (req, res)=> {
     try {
         const userId = req.user._id;
@@ -10,8 +11,8 @@ export const getUsersForSidebar = async (req, res)=> {
 
 
         const unseenMessages = {}
-        const promises = filteredUsers.map(async(user)=> {
-            const messages = await Message.find({senderId: user._id, seen: false})
+        const promises = filterUsers.map(async(user)=> {
+            const messages = await Message.find({senderId: user._id, receiverId: userId, seen: false})
             if(messages.length > 0) {
                 unseenMessages[user._id] = messages.length;
             }
@@ -38,17 +39,13 @@ export const getMessages = async (req, res) => {
         await Message.updateMany({senderId: selectedUserId, receiverId: myId},
             {seen: true})
 
-
+        res.json({success: true, messages})
 
     } catch (error) {
         console.log(error.message);
         res.json({success: false, message: error.message})
     }
 }
-
-
-
-// api to mark message as seen using msg id
 
 export const markMessageAsSeen = async (req, res)=>{
     try {
@@ -74,7 +71,7 @@ export const sendMessage = async (req, res) =>{
             imageUrl = uploadResponse.secure_url;
         }
 
-        const newMesasage = await Message.create({
+        const newMessage = await Message.create({ 
             senderId,
             receiverId,
             text,
@@ -82,10 +79,11 @@ export const sendMessage = async (req, res) =>{
         })
         const receiverSocketId = UserSocketMap[receiverId];
         if (receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage", newMesasage)
+            io.to(receiverSocketId).emit("newMessage", newMessage) 
         }
 
-        res.json({success: true, newMesasage});
+        
+        res.json({success: true, message: newMessage});
 
     } catch(error) {
          console.log(error.message);

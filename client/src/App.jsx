@@ -7,6 +7,7 @@ import {Toaster} from "react-hot-toast"
 import { AuthContext } from '../context/AuthContext.jsx'
 
 
+
 const App = () => {
   const { authUser } = useContext(AuthContext)
   return (

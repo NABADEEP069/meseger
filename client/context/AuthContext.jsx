@@ -4,8 +4,6 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 
-
-
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
 
@@ -17,7 +15,7 @@ export const AuthProvider = ({ children })=>{
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setsocket] = useState(null);
 
-
+  
     const checkAuth = async () => {
         try {
             const { data } = await axios.get("/api/auth/check");
@@ -29,7 +27,6 @@ export const AuthProvider = ({ children })=>{
             toast.error(error.message)
         }
     }
-
     const login = async (state, credentials)=>{
         try {
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
@@ -54,32 +51,25 @@ export const AuthProvider = ({ children })=>{
         setAuthUser(null);
         setOnlineUsers([]);
         axios.defaults.headers.common["token"] = null;
-        toast.success("Logged out succesfullyyyyy")
+       
+        toast.success("Logged out successfully")
         socket.disconnect();
     }
 
-
-    // update profile info to handle user profile updates
     const updateProfile = async (body)=>{
         try {
             const { data } = await axios.put("/api/auth/update-profile", body);
             if(data.success){
                 setAuthUser(data.user);
-                toast.success("Profile update succesfulyyyyy")
+              
+                toast.success("Profile update successful")
             }
         } catch (error) {
             toast.error(error.message)
-
         }
     }
 
-
-
-
-
-
-
-
+   
     const connectSocket = (userData)=>{
         if(!userData || socket?.connected) return;
         const newSocket = io(backendUrl, {
@@ -94,11 +84,6 @@ export const AuthProvider = ({ children })=>{
             setOnlineUsers(userIds);
         })
     }
-
-
-
-
-
     useEffect(()=>{
         if(token){
             axios.defaults.headers.common["token"] = token;
