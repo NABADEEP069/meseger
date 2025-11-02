@@ -23,7 +23,11 @@ export const ChatProvider = ({ children })=>{
                setUnseenMessages(data.unseenMessages)
            }
        } catch (error) {
-        toast.error(error.message)
+           if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+               toast.error("Network Error: Cannot connect to backend");
+           } else {
+               toast.error(error.response?.data?.message || error.message);
+           }
        }
     }
     const getMessages = async (userId) => {
@@ -33,7 +37,11 @@ export const ChatProvider = ({ children })=>{
                setMessages(data.messages);
            }
         } catch (error) {
-            toast.error(error.message)
+            if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+                toast.error("Network Error: Cannot connect to backend");
+            } else {
+                toast.error(error.response?.data?.message || error.message);
+            }
         }
     }
 
@@ -47,7 +55,11 @@ export const ChatProvider = ({ children })=>{
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+                toast.error("Network Error: Cannot send message. Check backend connection.");
+            } else {
+                toast.error(error.response?.data?.message || error.message);
+            }
         }
     }  
 

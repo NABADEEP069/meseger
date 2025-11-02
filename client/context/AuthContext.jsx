@@ -3,8 +3,17 @@ import axios from 'axios'
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+// Get backend URL and remove trailing slash if present
+const rawBackendUrl = import.meta.env.VITE_BACKEND_URL || "";
+const backendUrl = rawBackendUrl.endsWith('/') ? rawBackendUrl.slice(0, -1) : rawBackendUrl;
 axios.defaults.baseURL = backendUrl;
+
+// Log error if backend URL is not set (helps with debugging)
+if (!import.meta.env.VITE_BACKEND_URL) {
+  console.error("⚠️ VITE_BACKEND_URL is not set! API calls will fail. Please set this environment variable in Vercel.");
+} else {
+  console.log("✅ Backend URL configured:", backendUrl);
+}
 
 export const AuthContext = createContext();
 export const AuthProvider = ({ children })=>{
@@ -17,20 +26,31 @@ export const AuthProvider = ({ children })=>{
 
     const checkAuth = async () => {
         try {
+            if (!backendUrl) {
+                console.error("⚠️ Backend URL not configured. Please set VITE_BACKEND_URL in Vercel environment variables.");
+                return;
+            }
             const { data } = await axios.get("/api/auth/check");
             if (data.success) {
                 setAuthUser(data.user)
                 connectSocket(data.user)
             }
         } catch (error) {
-        
-            const errorMessage = error.response?.data?.message || error.message;
-            toast.error(errorMessage);
+            if (!backendUrl) {
+                toast.error("Backend URL not configured. Check environment variables.");
+            } else {
+                const errorMessage = error.response?.data?.message || error.message;
+                toast.error(errorMessage);
+            }
         }
     }
 
     const login = async (state, credentials)=>{
         try {
+            if (!backendUrl) {
+                toast.error("Backend URL not configured. Please set VITE_BACKEND_URL in Vercel.");
+                return;
+            }
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
             if (data.success){
                 setAuthUser(data.userData);
@@ -43,9 +63,12 @@ export const AuthProvider = ({ children })=>{
                 toast.error(data.message)
             }
         } catch (error) {
-          
-            const errorMessage = error.response?.data?.message || error.message;
-            toast.error(errorMessage);
+            if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+                toast.error(`Network Error: Cannot connect to backend. Check if VITE_BACKEND_URL is set correctly.`);
+            } else {
+                const errorMessage = error.response?.data?.message || error.message;
+                toast.error(errorMessage);
+            }
         }
     }
 
@@ -63,7 +86,7 @@ export const AuthProvider = ({ children })=>{
   
     const updateProfile = async (body)=>{
         try {
-            const { data } = await axios.put("/api/auth/update-profile", body);
+            const { data } = await axios.put("/api/auth/updateProfile", body);
             if(data.success){
                 setAuthUser(data.user);
                 toast.success("Profile update successful")
@@ -76,6 +99,10 @@ export const AuthProvider = ({ children })=>{
 
     const connectSocket = (userData)=>{
         if(!userData || socket?.connected) return;
+        if(!backendUrl) {
+            console.error("⚠️ Cannot connect Socket.io: VITE_BACKEND_URL is not set");
+            return;
+        }
         const newSocket = io(backendUrl, {
             query: {
                 userId: userData._id,
